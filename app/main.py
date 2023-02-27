@@ -1,7 +1,7 @@
 from dotenv import load_dotenv
 load_dotenv()
 from typing import Optional
-from fastapi import Depends, FastAPI
+from fastapi import Depends, FastAPI, HTTPException, Response, status
 from .api import database, models, schemas
 from sqlalchemy.orm import Session
 
@@ -21,16 +21,14 @@ async def index(limit: int = 10, sort: Optional[str] = None, db: Session = Depen
     blogs = db.query(models.Blog).all()
     return blogs
 
-@app.get("/blog/{id}")
-async def show(id: int, db: Session = Depends(get_db)):
+@app.get("/blog/{id}", status_code=status.HTTP_200_OK)
+async def show(id: int, res: Response, db: Session = Depends(get_db)):
     blog = db.query(models.Blog).filter(models.Blog.id == id).first()
+    if not blog:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=f"No blog found with id of {id}")
     return blog
 
-@app.get("/blog/{id}/comments")
-async def comments(id: int, limit: int = 10):
-    return { "data": {"1", "2"} }
-
-@app.post("/blog", status_code=201)
+@app.post("/blog", status_code=status.HTTP_201_CREATED)
 async def create_blog(req: schemas.Blog, db: Session = Depends(get_db)):
     new_blog = models.Blog(title=req.title, body=req.body)
     db.add(new_blog)

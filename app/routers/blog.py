@@ -7,19 +7,19 @@ router = APIRouter(
     prefix="/blog"
 )
 
-@router.get("/blog", status_code=status.HTTP_200_OK, response_model=List[schemas.BlogShow])
+@router.get("/", status_code=status.HTTP_200_OK, response_model=List[schemas.BlogShow])
 def index(db: Session = Depends(database.get_db)):
     blogs = db.query(models.Blog).all()
     return blogs
 
-@router.get("/blog/{id}", status_code=status.HTTP_200_OK, response_model=schemas.BlogShow)
+@router.get("/{id}", status_code=status.HTTP_200_OK, response_model=schemas.BlogShow)
 def show(id: int, db: Session = Depends(database.get_db)):
     blog = db.query(models.Blog).filter(models.Blog.id == id).first()
     if not blog:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Blog with this id was not found!")
     return blog
 
-@router.post("/blog", status_code=status.HTTP_201_CREATED, response_model=schemas.BlogCreate)
+@router.post("/", status_code=status.HTTP_201_CREATED, response_model=schemas.BlogCreate)
 def create(req: schemas.BlogCreate, db: Session = Depends(database.get_db)):
     new_blog = models.Blog(title=req.title, body=req.body)
     db.add(new_blog)
@@ -27,7 +27,7 @@ def create(req: schemas.BlogCreate, db: Session = Depends(database.get_db)):
     db.refresh(new_blog)
     return new_blog
 
-@router.put("/blog/{id}", status_code=status.HTTP_202_ACCEPTED, response_model=schemas.BlogUpdate)
+@router.put("/{id}", status_code=status.HTTP_202_ACCEPTED, response_model=schemas.BlogUpdate)
 def update(id: int, req: schemas.BlogUpdate, db: Session = Depends(database.get_db)):
     blog = db.query(models.Blog).filter(models.Blog.id == id).first()
     if not blog:
@@ -38,7 +38,7 @@ def update(id: int, req: schemas.BlogUpdate, db: Session = Depends(database.get_
     db.refresh(blog)
     return blog
 
-@router.delete("/blog/{id}", status_code=status.HTTP_204_NO_CONTENT)
+@router.delete("/{id}", status_code=status.HTTP_204_NO_CONTENT)
 def destroy(id: int, db: Session = Depends(database.get_db)):
     blog = db.query(models.Blog).filter(models.Blog.id == id)
     if not blog.first():

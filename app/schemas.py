@@ -16,3 +16,10 @@ class BlogCreate(BlogBase):
 class BlogUpdate(BlogBase):
     title: Optional[str] = None
     body: Optional[str] = None
+
+class UserBase(BaseModel):
+    name: str
+    email: str
+    password: str
+    class Config:
+        orm_mode = True

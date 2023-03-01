@@ -22,7 +22,7 @@ def show(id: int, db: Session = Depends(database.get_db)):
 
 @router.post("/", status_code=status.HTTP_201_CREATED, response_model=schemas.BlogShow)
 def create(req: schemas.BlogCreate, db: Session = Depends(database.get_db)):
-    new_blog = models.Blog(title=req.title, body=req.body)
+    new_blog = models.Blog(title=req.title, body=req.body, user_id=1)
     db.add(new_blog)
     db.commit()
     db.refresh(new_blog)

@@ -4,7 +4,8 @@ from sqlalchemy.orm import Session
 from typing import List
 
 router = APIRouter(
-    prefix="/blog"
+    prefix="/blog",
+    tags=["blogs"]
 )
 
 @router.get("/", status_code=status.HTTP_200_OK, response_model=List[schemas.BlogShow])
@@ -19,7 +20,7 @@ def show(id: int, db: Session = Depends(database.get_db)):
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Blog with this id was not found!")
     return blog
 
-@router.post("/", status_code=status.HTTP_201_CREATED, response_model=schemas.BlogCreate)
+@router.post("/", status_code=status.HTTP_201_CREATED, response_model=schemas.BlogShow)
 def create(req: schemas.BlogCreate, db: Session = Depends(database.get_db)):
     new_blog = models.Blog(title=req.title, body=req.body)
     db.add(new_blog)

@@ -28,3 +28,7 @@ class BlogCreate(BlogBase):
 class BlogUpdate(BlogBase):
     title: Optional[str] = None
     body: Optional[str] = None
+
+class Login(BaseModel):
+    email: str
+    password: str

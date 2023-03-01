@@ -1,7 +1,7 @@
 from sqlalchemy.orm import Session
 from .. import models, schemas
 from fastapi import status, HTTPException
-from ..hashing import bcrypt
+from ..hashing import Hash
 
 def show(id: int, db: Session):
     user = db.query(models.User).filter(models.User.id == id).first()
@@ -10,7 +10,7 @@ def show(id: int, db: Session):
     return user
 
 def create(req: schemas.UserBase, db: Session):
-    new_user = models.User(name=req.name, email=req.email, password=bcrypt(req.password))
+    new_user = models.User(name=req.name, email=req.email, password=Hash.bcrypt(req.password))
     db.add(new_user)
     db.commit()
     db.refresh(new_user)

@@ -5,13 +5,14 @@ class BlogBase(BaseModel):
     title: str
     body: str
 
-class Blog(BlogBase):
-    id: int
+class BlogShow(BlogBase):
     class Config:
         orm_mode = True
 
 class BlogCreate(BlogBase):
     pass
+    class Config:
+        orm_mode = True
 
 class BlogUpdate(BlogBase):
     title: Optional[str] = None

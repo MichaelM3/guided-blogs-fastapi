@@ -1,11 +1,11 @@
 from fastapi import APIRouter, Depends, status, HTTPException
-from .. import schemas, models, database
+from ..database import schemas, models, database
 from sqlalchemy.orm import Session
 from typing import List
 
 router = APIRouter(
     prefix="/blog",
-    tags=["blogs"]
+    tags=["Blogs"]
 )
 
 @router.get("/", status_code=status.HTTP_200_OK, response_model=List[schemas.BlogShow])

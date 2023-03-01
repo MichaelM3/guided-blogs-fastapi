@@ -1,11 +1,11 @@
 from fastapi import APIRouter, Depends, status, HTTPException
-from .. import schemas, models, database
-from ..hashing import bcrypt
+from ..database import schemas, models, database
+from ..database.hashing import bcrypt
 from sqlalchemy.orm import Session
 
 router = APIRouter(
     prefix="/user",
-    tags=["users"]
+    tags=["Users"]
 )
 
 @router.get("/{id}", status_code=status.HTTP_200_OK, response_model=schemas.UserShow)

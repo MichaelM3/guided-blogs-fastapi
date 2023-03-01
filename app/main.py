@@ -1,7 +1,7 @@
 from dotenv import load_dotenv
 load_dotenv()
 from fastapi import FastAPI
-from . import database, models
+from .database import database, models
 from .routers import blog, user
 
 app = FastAPI()

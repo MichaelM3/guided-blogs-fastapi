@@ -1,4 +1,5 @@
 from fastapi import APIRouter, Depends, HTTPException, status
+from fastapi.security import OAuth2PasswordRequestForm
 from sqlalchemy.orm import Session
 from .token import create_access_token
 from ..database import schemas, database, models
@@ -9,8 +10,8 @@ router = APIRouter(
 )
 
 @router.post("/login")
-def login(req: schemas.Login, db: Session = Depends(database.get_db)):
-    user = db.query(models.User).filter(models.User.email == req.email).first()
+def login(req: OAuth2PasswordRequestForm = Depends(), db: Session = Depends(database.get_db)):
+    user = db.query(models.User).filter(models.User.email == req.username).first()
     if not user:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Invalid credentials")
     if not Hash.verify(user.password, req.password):
